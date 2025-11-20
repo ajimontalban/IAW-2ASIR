@@ -15,5 +15,18 @@ while ($i <= $num1){
     $i++;
 }
 
+
+// Mediante bucle `for` y concatenando etiquetas html
+// $html = "<p> Los divisores del número $num1 son: </p><p>";
+// for ($i=1; $i <= $num1; $i++){
+//      if (($num1 % $i) == 0 ){
+//          $html .= "$i <br />";
+//      }
+//
+// }
+// $html .= "</p>";
+
+
+
 echo "<p> Los divisores de $num1 son: " . implode(',', $divisores) . "</p>";
 ?>
