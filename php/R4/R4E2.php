@@ -1,3 +1,4 @@
+
 <?php
 function comprobacion($a,$b){
     if ( ! preg_match('/^[1-9][0-9]*$/',$a) ||  ! preg_match('/^[1-9][0-9]*$/',$b)){
@@ -21,20 +22,22 @@ function suma_divisores($num){
     return $suma;
 }
 
-function son_amigos($a,$b){
-    return (suma_divisores($a) == $b) && (suma_divisores($b) == $a);
+function es_perfecto($n){
+    return (suma_divisores($n) == $n);
 }
-
 ?>
+
 <?php
-$num1 = $_GET['ope1'];
-$num2 = $_GET['ope2'];
+$n = $_GET['n'];
 
-comprobacion($num1,$num2);
-
-if (son_amigos($num1,$num2))
-    echo "<p> Los numeros $num1 y $num2 son amigos </p>";
-else
-    echo "<p> Los numeros $num1 y $num2 no son amigos </p>";
+if ($n < 1)
+    echo "<p> Error! Solo números enteros mayores a 1 </p>";
+else {
+    $html = "El número $n ";
+    if (! es_perfecto($n))
+        $html .= "no ";
+    $html .= "perfecto";
+    echo $html;
+}
 
 ?>
