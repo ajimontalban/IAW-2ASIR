@@ -7,17 +7,15 @@ function gen_array($n){
     return $s;
 }
 
-function recuento($s,&$par,&$inpar){
+function recuento($s,&$par,&$impar){
     $par = 0;
-    $inpar = 0;
+    $impar = 0;
     foreach ($s as $i => $valor){
         if ($valor % 2 == 0)
             $par++;
         else
-            $inpar++;
+            $impar++;
     }
-    
-
 }
 
 ?>
@@ -25,7 +23,12 @@ function recuento($s,&$par,&$inpar){
 $elementos = $_GET['n'];
 
 $serie = gen_array($elementos);
+recuento($serie,$par,$impar);
+
 
 echo implode(' ', $serie);
+echo "<br/>";
+echo "<p> Número de elementos pares: $par </p>";
+echo "<p> Número de elementos impares: $impar </p>";
 
 ?>
