@@ -18,10 +18,10 @@ function lanzamiento($n,&$serie){
 $n = $_GET['n'];
 
 lanzamiento($n,$serie);
-
 for ($i=1;$i<=6;$i++){
+    $porcentaje=(($serie[$i]/$n)*100);
     echo "<p>Número de veces que ha salido la cara $i: $serie[$i] "
-        . $porcentaje=(($serie[$i])/6) . "</p>";
+        . round($porcentaje,2) . "% de $n</p>";
 }
 
 ?>
