@@ -4,115 +4,50 @@ function dni($a){
     $arr_aux = [];
     do{
     $dni = rand(10000000,99999999);
-    if (isset($arr[$dni]))
-        continue;
-    else{
+    if (! isset($arr_aux[$dni]))
         $arr_aux[$dni] = 1;
         $alumnos[] = $dni;
-    }
     }while(count($arr_aux)<$a);
-
     return $alumnos;
 }
 
 function notas($n){
     $l_notas = [];
     for ($i = 0; $i < $n; $i++){
-        $l_notas[] = round((rand()/ getrandmax()*(10.00 - 0.00)+0.00),2);
+        $nota = (rand()/ getrandmax()*(10.00 - 0.00)+0.00);
+        // Multiplica por el numero de decimales, trunca el resto y vuelve
+        // a tener los decimales anteriores
+        $nota = floor($nota *100)/100;
+        $l_notas[] = $nota;
     }
     return $l_notas;
 }
 
-function matriz($a,$n){
-    $alumnos = dni($a);
-    $matriz = []; 
-    for ($i=0;$i<count($alumnos);$i++){
-        $matriz[$alumnos[$i]] = notas($n);
-    }
+function matriz_num($a,$n){
+    $matriz = [];
+    for ($i=0;$i < $a;$i++)
+        $matriz[$i] = notas($n);
     return $matriz;
 }
 
+//function matriz($a,$n){
+//    $alumnos = dni($a);
+//    $matriz = []; 
+//    for ($i=0;$i<count($alumnos);$i++){
+//        $matriz[$alumnos[$i]] = notas($n);
+//   }
+//   return $matriz;
+//}
+
 function nif($x){
-    $letra = $x % 23;
-    switch($letra){
-        case 0:
-            $nif = $x . "T";
-            break;
-        case 1:
-            $nif = $x . "R";
-            break;
-        case 2:
-            $nif = $x . "W";
-            break;
-        case 3:
-            $nif = $x . "A";
-            break;
-        case 4:
-            $nif = $x . "G";
-            break;
-        case 5:
-            $nif = $x . "M";
-            break;
-        case 6:
-            $nif = $x . "Y";
-            break;
-        case 7:
-            $nif = $x . "F";
-            break;
-        case 8:
-            $nif = $x . "P";
-            break;
-        case 9:
-            $nif = $x . "D";
-            break;
-        case 10:
-            $nif = $x . "X";
-            break;
-        case 11:
-            $nif = $x . "B";
-            break;
-        case 12:
-            $nif = $x . "N";
-            break;
-        case 13:
-            $nif = $x . "J";
-            break;
-        case 14:
-            $nif = $x . "Z";
-            break;
-        case 15:
-            $nif = $x . "S";
-            break;
-        case 16:
-            $nif = $x . "Q";
-            break;
-        case 17:
-            $nif = $x . "V";
-            break;
-        case 18:
-            $nif = $x . "H";
-            break;
-        case 19:
-            $nif = $x . "L";
-            break;
-        case 20:
-            $nif = $x . "C";
-            break;
-        case 21:
-            $nif = $x . "K";
-            break;
-        case 22:
-            $nif = $x . "E";
-            break;
-        default:
-            exit("Algo ha salido mal calculando el nif ");
-    }
-    return $nif;
+    $letra = array("T","R","W","A","G","M","F","P","D","X","B","N","J","Z",
+    "S","Q","V","H","L","C","K","E");
+    $x .= $letra[$x%23];
+    return $x;
 }
 
 function notamayor($i,$array){
     // $i es el indice del examen que queremos acceder
-
     $claves = array_keys($array);
     if (!($array[$claves[0]][$i]))
         exit("Ese examen no ha sido realizado!");
@@ -130,21 +65,20 @@ function notamayor($i,$array){
     return $nota;
 }
 
-function notamenor($i=0,$array){
-    // $i es el indice del examen que queremos acceder
+function notamenor($array,$y=0){
+    // $y es el indice del examen que queremos acceder
 
     $claves = array_keys($array);
-    if (!($array[$claves[0]][$i]))
-        exit("Ese examen no ha sido realizado!");
-    
-
-    foreach($array as $clave => $valor){
-        reset($array[$clave]);
+    for ($i=0;$i<count($claves);$i++){
+        reset($array[$claves[$i]]);
     }
+    if (!($array[$claves[0]][$y]))
+        exit("Ese examen no ha sido realizado!");
+
     $nota = 11;
     foreach($array as $clave => $valor){
-        if ($nota > $array[$clave][$i])
-            $nota = $array[$clave][$i];
+        if ($nota > $array[$clave][$y])
+            $nota = $array[$clave][$y];
         else
             continue;
     }
@@ -155,15 +89,20 @@ function notamenor($i=0,$array){
 $a = $_GET['a'];
 $n = $_GET['n'];
 $i = $_GET['i'];
-$notas = matriz($a,$n);
 
+$notas = matriz_num($a,$n);
+
+$alumnos = dni($a);
+for ($j=0;$j<count($notas);$j++){
+
+}
 foreach($notas as $alumno => $puntuaciones){
     $persona = nif($alumno);
     echo "<p> $persona => " . implode(', ', $puntuaciones) . "</p>";
 }
 
 $notamax0 = notamayor($i,$notas);
-$notamin0 = notamenor($i,$notas);
+$notamin0 = notamenor($notas,$i);
 
 echo "<p>La nota más alta es: $notamax0 </p>";
 echo "<p>La nota más baja es: $notamin0 </p>";
