@@ -56,7 +56,7 @@ function nota_mayor($array){
 function nota_menor($array){
     // asigno valor fuera del rango de notas
     //$nota_men = 11;
-    $nota_men = [0][0];
+    $nota_men = $array[0][0];
     for ($i=0;$i<count($array);$i++){
         for ($j=0;$j< count($array[$i]);$j++){
             if ($array[$i][$j] < $nota_men){
@@ -86,12 +86,13 @@ function buscar_notas($array,$nota){
     return $indices;
 }
 
+// Intentar sacar desde la funcion el contenido
 function mostrar_alumnos($array_indice,$array_alumnos){
     $vector = [];
-    for ($i=0;$i<count($array); $i++){
-       $vector[] = nif($array_alumnos[$array[$i]]);
+    for ($i=0;$i<count($array_indice); $i++){
+       $vector[] = nif($array_alumnos[$array_indice[$i]]);
     }
-    return implode('-',$vector);
+    return $vector;
 }
 ?>
 <?php
@@ -105,11 +106,20 @@ for ($j=0;$j<count($notas);$j++){
     echo "<p> $nif => " . implode(', ',$notas[$j]) . " </p>";     
 }
 
+
 $notamax0 = nota_mayor($notas);
 $notamin0 = nota_menor($notas);
 
 echo "<p>La nota más alta es: $notamax0 </p>";
 echo "<p>La nota más baja es: $notamin0 </p>";
 
-$alumno_nota_baja = mostrar_alumnos();
+$lis_comprobacion = [1,3,4];
+$lista_alumnos_mayor = buscar_notas($notas,$notamin0);
+$lista_alumnos_menor = buscar_notas($notas,$notamax0);
+$al_menor = mostrar_alumnos($lista_alumnos_menor,$alumnos);
+$al_mayor = mostrar_alumnos($lista_alumnos_mayor,$alumnos);
+$prueba = mostrar_alumnos($lis_comprobacion,$alumnos);
+echo "<p>Alumnos con la nota mas baja:<br/>" . implode('-',$al_menor) . " </p>";
+echo "<p>Alumnos con la nota mas alta:<br>" . implode('-',$al_mayor) . " </p>";
+echo "<p>Prueba de la funcion para sacar alumnos:<br>" . implode(' - ',$prueba) . " </p>";
 ?>
