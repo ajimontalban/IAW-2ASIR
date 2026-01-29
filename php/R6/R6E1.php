@@ -96,6 +96,27 @@ function buscar_notas($array,$nota,$dimension=2){
     return $indices;
 }
 
+function buscar_medias($array,$nota,$accion){
+    $indices = [];
+    switch ($accion){
+    case 'MAYOR':
+        for ($i=0;$i<count($array);$i++){
+            if ($nota < $array[$i])
+                $indices[] = $i;
+        }
+        break;
+    case 'MENOR':
+        for ($i=0;$i<count($array);$i++){
+            if ($nota > $array[$i])
+                $indices[] = $i;
+        }
+        break;
+    default:
+        exit('La función buscar_medias() toma valores de MAYOR o MENOR como tercer parametro');
+    }
+    return $indices;
+}
+
 function mostrar_alumnos($array_indice,$array_alumnos){
     $cadena = "";
     for ($i=0;$i<count($array_indice); $i++){
@@ -123,13 +144,45 @@ function mostrar_media($array_alumnos,$notas){
 
     $indice_max_media = buscar_notas($media,$max_media,1);
     $indice_min_media = buscar_notas($media,$min_media,1);
+    $media_total = media($media);
+    $encima_media = buscar_medias($media,$media_total,'MAYOR');
+    $debajo_media = buscar_medias($media,$media_total,'MENOR');
     echo "<p>Nota media más alta de la asignatura: $max_media</p>"; 
     echo "<p>Alumnos con la nota media más alta:</p>"; 
     mostrar_alumnos($indice_max_media,$array_alumnos);
     echo "<p>Nota media más baja de la asignatura: $min_media</p>"; 
     echo "<p>Alumnos con la nota media más baja:</p>"; 
     mostrar_alumnos($indice_min_media,$array_alumnos);
-    echo "<p>Nota media de la asignatura: ".media($media)."</p>"; 
+    echo "<p>Nota media de la asignatura: $media_total </p>"; 
+    echo "<p>Alumnos por encima de la nota media:</p>"; 
+    mostrar_alumnos($encima_media,$array_alumnos);
+    echo "<p>Alumnos por debajo de la nota media:</p>"; 
+    mostrar_alumnos($debajo_media,$array_alumnos);
+}
+
+function clasificacion($notas){
+    $calificaciones = ['suspensos'=>0,'aprobados'=>0,'notables'=>0,'sobresalientes'=>0];
+    for ($i=0;$i<count($notas);$i++){
+        for ($j=0;$j< count($notas[$i]);$j++){
+            switch (true){
+            case ($notas[$i][$j]>=0 && $notas[$i][$j] < 5):
+                $calificaciones['suspensos']++;
+                break;
+            case ($notas[$i][$j]>=5 && $notas[$i][$j] < 7):
+                $calificaciones['aprobados']++;
+                break;
+            case ($notas[$i][$j]>=7 && $notas[$i][$j] < 9):
+                $calificaciones['notables']++;
+                break;
+            case ($notas[$i][$j]>=9 && $notas[$i][$j] <= 10):
+                $calificaciones['sobresalientes']++;
+                break;
+            }
+        }
+    }
+    foreach($calificaciones as $clave => $valor){
+        echo "<p>Número de $clave: $valor </p>";
+    }
 
 }
 ?>
@@ -155,4 +208,5 @@ echo "<p>La nota más baja es: $notamin0 </p>";
 echo "<p>Alumnos con la nota mas baja:<br/>";
 mostrar_alumnos($lista_alumnos_menor,$alumnos);
 mostrar_media($alumnos,$notas);
+clasificacion($notas);
 ?>
