@@ -32,7 +32,7 @@ function matriz_num($a,$n){
 }
 
 function nif($x){
-    $letra = array("T","R","W","A","G","M","F","P","D","X","B","N","J","Z",
+    $letra = array("T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z",
     "S","Q","V","H","L","C","K","E");
     $x .= $letra[$x%23];
     return $x;
@@ -68,31 +68,69 @@ function nota_menor($array){
     return $nota_men;
 }
 
-function media($lista_notas){
+function media($lista_notas,$decimal=2){
     $suma = 0;
     for ($i=0;$i<count($lista_notas);$i++){
         $suma += $lista_notas[$i]; 
     }
-    $media =$suma/count($lista_notas) ;
+    $media = $suma/count($lista_notas) ;
+    $media = floor($media*10**$decimal)/10**$decimal;
     return $media;
 }
 
-function buscar_notas($array,$nota){
+function buscar_notas($array,$nota,$dimension=2){
     $indices = [];
-    for ($i=0;$i<count($array);$i++){
-        if (in_array($nota, $array[$i]))
-            $indices[] = $i;
+    if ($dimension == 2){
+        for ($i=0;$i<count($array);$i++){
+            if (in_array($nota, $array[$i]))
+                $indices[] = $i;
+        }
+    }elseif($dimension == 1){
+        for ($i=0;$i<count($array);$i++){
+            if ($nota == $array[$i])
+                $indices[] = $i;
+        }
+    }else{
+        exit( "Has introducido una dimensión mayor a 2.");
     }
     return $indices;
 }
 
-// Intentar sacar desde la funcion el contenido
 function mostrar_alumnos($array_indice,$array_alumnos){
-    $vector = [];
+    $cadena = "";
     for ($i=0;$i<count($array_indice); $i++){
-       $vector[] = nif($array_alumnos[$array_indice[$i]]);
+       $nif = nif($array_alumnos[$array_indice[$i]]);
+       $cadena .= " - $nif";
     }
-    return $vector;
+    echo "<p>" . substr($cadena,3). "</p>";
+}
+
+function mostrar_media($array_alumnos,$notas){
+    $max_media = media($notas[0]);
+    $min_media = media($notas[0]);
+    echo "<p>Nota media de la asignatura para cada alumno:</p>"; 
+    for ($i=0;$i<count($array_alumnos);$i++){
+        $media[$i] = media($notas[$i]);
+        $alumno_nif = nif($array_alumnos[$i]);
+        echo "<p>$alumno_nif - " . $media[$i] . "</p>";
+        if ($media[$i] > $max_media){
+            $max_media = $media[$i];
+        }
+        if ($media[$i] < $min_media){
+            $min_media = $media[$i];
+        }
+    }
+
+    $indice_max_media = buscar_notas($media,$max_media,1);
+    $indice_min_media = buscar_notas($media,$min_media,1);
+    echo "<p>Nota media más alta de la asignatura: $max_media</p>"; 
+    echo "<p>Alumnos con la nota media más alta:</p>"; 
+    mostrar_alumnos($indice_max_media,$array_alumnos);
+    echo "<p>Nota media más baja de la asignatura: $min_media</p>"; 
+    echo "<p>Alumnos con la nota media más baja:</p>"; 
+    mostrar_alumnos($indice_min_media,$array_alumnos);
+    echo "<p>Nota media de la asignatura: ".media($media)."</p>"; 
+
 }
 ?>
 <?php
@@ -106,20 +144,15 @@ for ($j=0;$j<count($notas);$j++){
     echo "<p> $nif => " . implode(', ',$notas[$j]) . " </p>";     
 }
 
-
 $notamax0 = nota_mayor($notas);
 $notamin0 = nota_menor($notas);
-
+$lista_alumnos_mayor = buscar_notas($notas,$notamax0);
+$lista_alumnos_menor = buscar_notas($notas,$notamin0);
 echo "<p>La nota más alta es: $notamax0 </p>";
+echo "<p>Alumnos con la nota mas alta:<br>" ;
+mostrar_alumnos($lista_alumnos_mayor,$alumnos);
 echo "<p>La nota más baja es: $notamin0 </p>";
-
-$lis_comprobacion = [1,3,4];
-$lista_alumnos_mayor = buscar_notas($notas,$notamin0);
-$lista_alumnos_menor = buscar_notas($notas,$notamax0);
-$al_menor = mostrar_alumnos($lista_alumnos_menor,$alumnos);
-$al_mayor = mostrar_alumnos($lista_alumnos_mayor,$alumnos);
-$prueba = mostrar_alumnos($lis_comprobacion,$alumnos);
-echo "<p>Alumnos con la nota mas baja:<br/>" . implode('-',$al_menor) . " </p>";
-echo "<p>Alumnos con la nota mas alta:<br>" . implode('-',$al_mayor) . " </p>";
-echo "<p>Prueba de la funcion para sacar alumnos:<br>" . implode(' - ',$prueba) . " </p>";
+echo "<p>Alumnos con la nota mas baja:<br/>";
+mostrar_alumnos($lista_alumnos_menor,$alumnos);
+mostrar_media($alumnos,$notas);
 ?>
