@@ -1,4 +1,7 @@
 <?php
+$IP="192.168.1.150";
+$USER="root";
+$PASS="root";
 ?>
 <html lang="es">
 <head>
@@ -7,7 +10,7 @@
 <body>
 <?php
 try{
-    $conexion = new mysqli("10.30.0.10","root","root");
+    $conexion = new mysqli($IP,$USER,$PASS);
 }
 catch(mysqli_sql_exception $error){
     echo "Error de conexión: " . $error->getMessage(). "<br/>";
@@ -27,6 +30,7 @@ for ($i=0;$i<$entero;$i++){
     foreach($resultado as $fila){
         $tabla[1] .= "<td>" . $fila['iPoblacion'] . "</td>";
     }
+    $anio++;
 }
 
 echo "<tr>". $tabla[0] . "</tr>";
