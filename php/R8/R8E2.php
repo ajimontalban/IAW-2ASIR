@@ -1,10 +1,4 @@
 <?php
-function generacion_sql($n){
-    $ult_anio = 2024;
-
-    
-    return $sql;
-}
 ?>
 <html lang="es">
 <head>
@@ -22,23 +16,22 @@ catch(mysqli_sql_exception $error){
 $conexion->select_db("bdPadron");
 $municipio = $_GET['m'];
 $entero = $_GET['n'];
+$ult_anio = 2024;
 
-
-
-$sql = "";
-$resultado = $conexion->query($sql);
 echo "<table border=\"1\">";
-echo "<tr><th>vaNomMunicipio</th></tr>";
-
-foreach($resultado as $fila){
-    echo "<tr><td>" . $fila['vaNomMunicipio'] . "</td></tr>";
+$anio = ($ult_anio - $entero)+1;
+for ($i=0;$i<$entero;$i++){
+    $tabla[0].="<th>iPoblacion$anio</th>";
+    $sql = "SELECT iPoblacion FROM taPoblacion,taMunicipios WHERE iRefMunicipio=iCodMunicipio and iAnio = $anio and vaNomMunicipio like '$municipio'";
+    $resultado = $conexion->query($sql);
+    foreach($resultado as $fila){
+        $tabla[1] .= "<td>" . $fila['iPoblacion'] . "</td>";
+    }
 }
+
+echo "<tr>". $tabla[0] . "</tr>";
+echo "<tr>". $tabla[1] . "</tr>";
 echo "</table>";
-#$fila = $resultado->fetch_assoc();
-#while($fila){
-#    echo $fila['vaNomMunicipio'] . "<br/>";
-#    $fila = $resultado->fetch_assoc();
-#}
 $resultado->close();
 $conexion->close();
 ?>
