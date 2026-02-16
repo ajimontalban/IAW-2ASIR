@@ -1,0 +1,26 @@
+<?php
+$IP="10.30.0.10";
+$USER="root";
+$PASS="root";
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="J Ignacio" />
+	<title></title>
+	<link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <form method="get" action="../php/R8E1.php">
+        <label for="n">Provincia</label>
+        <select name="provincia">
+<?php
+$conexion = new mysqli($IP,$USER,$PASS);
+?>
+        </select>
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
