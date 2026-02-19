@@ -17,21 +17,20 @@ catch(mysqli_sql_exception $error){
     exit();
 }
 $conexion->select_db("bdPadron");
-$provincia = $_GET['provincia'];
+$provincia = "Cadiz";
+
 $sql = "call prMunicipiosProvincia(?)";
 $procedimiento = $conexion->prepare($sql);
 $procedimiento->bind_param("s", $provincia);
 $procedimiento->execute();
 $resultado = $procedimiento->get_result();
 $procedimiento->close();
-echo "<table border=\"1\">";
-echo "<tr><th>Municipios</th></tr>";
 
-
-foreach($resultado as $fila){
-    echo "<tr><td>" . $fila['vaNomMunicipio'] . "</td></tr>";
+$fila = $resultado->fetch_assoc();
+while($fila){
+    echo $fila['vaNomMunicipio'] . '<br/>';
+    $fila = $resultado->fetch_assoc();
 }
-echo "</table>";
 $resultado->close();
 $conexion->close();
 ?>
