@@ -15,7 +15,7 @@ $BDD="bdPadron";
 	<link href="css/style.css" rel="stylesheet" />
 </head>
 <body>
-    <form method="get" action="R8E6.php">
+    <form method="post" action="R8E6.php">
         <label for="n">Provincia</label>
         <select name="provincia">
 <?php
