@@ -17,8 +17,8 @@ catch(mysqli_sql_exception $error){
     exit();
 }
 $conexion->select_db("bdPadron");
-$municipio = $_GET['municipio'];
-$entero = $_GET['entero'];
+$municipio = $_POST['municipio'];
+$entero = $_POST['entero'];
 
 $sql = "call prUltAnio(@ultanio)";
 $procedimiento = $conexion->prepare($sql);
