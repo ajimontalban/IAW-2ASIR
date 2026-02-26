@@ -2,6 +2,8 @@
 $IP="10.30.0.10";
 $USER="root";
 $PASS="root";
+$BDD="bdPadron";
+#$FORM="R8E6.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,26 +15,23 @@ $PASS="root";
 	<link href="css/style.css" rel="stylesheet" />
 </head>
 <body>
-    <form method="get" action="R8E1.php">
+    <form method="post" action="R8E6.php">
         <label for="n">Provincia</label>
         <select name="provincia">
 <?php
 try{
-$conexion = new mysqli($IP,$USER,$PASS);
+$conexion = new mysqli($IP,$USER,$PASS,$BDD);
 }
 catch (mysqli_sql_exception $error){
     echo "Error de conexión: " . $error->getMessage()."<br/>";
 }
-// Indicamos la bd a usar, se puede indicar tambien al hacer la primera conexion.
-$conexion->select_db("bdPadron");
-
 $sql = "SELECT vaNomProvincia FROM taProvincias";
 
 $resultado = $conexion->query($sql);
 
 $fila = $resultado->fetch_assoc();
 while ($fila){
-    echo "<option value=\"" . $fila['vaNomProvincia'] ."\">". strtoupper($fila['vaNomProvincia']). "</option>";
+    echo "<option value=\"" . $fila['vaNomProvincia'] ."\">". $fila['vaNomProvincia'] . "</option>";
     $fila = $resultado->fetch_assoc();
 }
 
