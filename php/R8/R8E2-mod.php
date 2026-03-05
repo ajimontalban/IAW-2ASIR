@@ -17,18 +17,25 @@ catch(mysqli_sql_exception $error){
     exit();
 }
 $conexion->select_db("bdPadron");
-$municipio = $_GET['m'];
-$entero = $_GET['n'];
+$municipio = $_POST['municipio'];
+$entero = $_POST['entero'];
 
-$sql = "select max(iAnio) as anio from taPoblacion";
+$sql = "call prUltAnio(@ultanio)";
+$procedimiento = $conexion->prepare($sql);
+$procedimiento->execute();
+$procedimiento->close();
+
+$sql = "select @ultanio as anio";
 $resultado = $conexion->query($sql);
 $fila = $resultado->fetch_assoc();
 $ianio = $fila['anio'];
 $resultado->close();
 
-$sql = "SELECT iPoblacion FROM taPoblacion,taMunicipios WHERE iRefMunicipio=iCodMunicipio and vaNomMunicipio = '$municipio'".
-    "ORDER BY iAnio DESC LIMIT $entero";
-$resultado = $conexion->query($sql);
+$sql = "call priPoblacionMunicipio(?,?)";
+$procedimiento = $conexion->prepare($sql);
+$procedimiento->bind_param("si",$municipio, $entero);
+$procedimiento->execute();
+$resultado = $procedimiento->get_result();
 if ($resultado->num_rows) {
     $html  = "<h2>Poblacion de " . strtoupper($municipio) . " de los últimos " . $entero . " años</h2>";
     $html .= "<table border=\"1\">";
