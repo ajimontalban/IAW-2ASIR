@@ -6,7 +6,7 @@
     <title>ejercicio 4</title>
 </head>
 <body>
-    <form action="../php/ejercicio4.php" method="get"></form>
+    <form action="../php/ejercicio4-nuevo.php" method="get">
        <label for="municipio">Municipios de España</label>
        <select name="municipio">
 <?php
@@ -48,5 +48,6 @@ $conexion->close();
         <label for="Total">
         <input type="checkbox" name="Total" value="iPoblacion" />Total<br/>
        <button type="submit">Enviar</button>
+    </form>
 </body>
 </html>
